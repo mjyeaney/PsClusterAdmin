@@ -1,0 +1,77 @@
+/* Rests + baselines */
+* { margin: 0; padding: 0; }
+html, body { background-color: #fff; }
+body { 
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    font-size: 12px; 
+    color: #4a4a4a; 
+}
+input, select, textarea { 
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    font-size: 12px; 
+}
+h1, h2, h3 { font-weight: 100; }
+a { text-decoration: none; }
+
+/* Header */
+#header { 
+    background-color: #227; 
+    padding: 1em; 
+    position: relative;
+    border-bottom: 1px solid #000;
+}
+#header h1 { 
+    color: #fff;
+    line-height: 2.5em;
+    font-size: 2em;
+}
+#header ul { list-style-type: none; position: absolute; right: 0; top: 0; font-size: 1.2em; }
+#header ul li { 
+    text-align: right;
+    position: relative;
+    line-height: 6em;
+    margin-right: 1em;
+    background-image: url(/images/GitHub-Mark-Light-32px.png);
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 2em;
+}
+#header ul li a { color: #fff; display: inline-block; margin: 0 1em; }
+
+/* Left Menu */
+#leftMenu { 
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 7em;
+    width: 20em;
+    padding: 1em; 
+    background-color: #eee; 
+    border-top: 1px solid #000;
+    border-right: 1px solid #a0a0a0;
+}
+#leftMenu h2 { font-weight: 400; margin-bottom: .75em; }
+#leftMenu ul { list-style-type: none; margin-bottom: 1em; }
+#leftMenu ul li { margin-bottom: .5em; }
+#leftMenu ul li a { text-decoration: none; color: #4a4a4a; display: block; padding: .25em;}
+#leftMenu #footer { position: absolute; bottom: 1em; right: 0; left: 0; }
+#leftMenu #footer p { text-align: center; }
+
+/* Content */
+#content { 
+    position: absolute; 
+    left: 22em; 
+    bottom: 0; 
+    top: 7em; 
+    right: 0; 
+    overflow-y: scroll;
+    border-top: 1px solid #000; 
+}
+#content p.waterMark {
+    top: 40%;
+    position: absolute;
+    text-align: center;
+    left: 0;
+    right: 0;
+    font-size: 1.25em;
+}
