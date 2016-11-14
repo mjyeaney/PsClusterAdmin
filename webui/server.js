@@ -31,6 +31,18 @@ app.use(express.static(__dirname, {
 }));
 
 //
+// Setup route handlers
+//
+app.get('/Test', function(req, res){
+    // Make sure this response is not cached   
+    setNoCache(res);
+    var data = {
+        value: "Sample"
+    };
+    res.json(data);
+});
+
+//
 // Init server listener loop
 //
 var server = app.listen(port, function () {
