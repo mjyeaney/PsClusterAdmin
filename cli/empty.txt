@@ -1,6 +1,0 @@
-Placeholder file.
-
-Want to implement a basic high-level function like so:
-
-. .\Install-PsClusterCmdlets.ps1
-Create-PsCluster -Location -Name -ResourceGroupName -Size
