@@ -20,7 +20,10 @@ function New-PsCluster{
         [String]$ResourceGroupName,
 
         [parameter(Mandatory=$true)]
-        [Int]$ClusterSize
+        [Int]$ClusterSize,
+
+        [parameter(Mandatory=$true)]
+        [Int]$StoragePoolSize
     )
 
     #
@@ -35,17 +38,33 @@ function New-PsCluster{
     # The basics - create a resource group
     #
     Write-Log "Creating resource group"
-    New-AzureRmResourceGroup -Name $ResourceGroupName -Location $Location
+    if ((Get-AzureRmResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue) -eq $null){
+        New-AzureRmResourceGroup -Name $ResourceGroupName -Location $Location
+    } else {
+        Write-Log "Resource group already exists - continuing"
+    }
 
     #
     # We need a pool of storage accounts
     #
     Write-Log "Creating storage account pool"
 
-    # TODO: Put this in a loop driven from a parameter
-    New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -Name "11172016vmssa1" -SkuName Standard_LRS -Location $Location
-    New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -Name "11172016vmssa2" -SkuName Standard_LRS -Location $Location
-    New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -Name "11172016vmssa3" -SkuName Standard_LRS -Location $Location
+    # Create storage pool
+    $vhdContainers = @()
+    $date = [DateTime]::Now
+    1..$StoragePoolSize | % {
+        $name = [String]::Format("{0}{1}{2}vmst{3}", $date.Month, $date.Day, $date.Year, $_)
+        if ((Test-AzureName -Storage $name) -eq $false){
+            New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName `
+                -Name $name `
+                -SkuName Standard_LRS `
+                -Location $Location
+            $vhdContainers += [String]::Format("https://{0}.blob.core.windows.net/vhds", $name)
+        } else {
+            Write-Error "Unable to create required storage account - exiting"
+            Break
+        }
+    }
 
     #
     # And a network / subnet profile
@@ -70,10 +89,9 @@ function New-PsCluster{
     #
     Write-Log "Assigning storage accounts to storage profile"
     $storageProfile = "PsClusterStorageProfile"
-    $imagePublisher = "MicrosoftWindowsServer"; $imageOffer = "WindowsServer"; $imageSku = "2012-R2-Datacenter"
-    $vhdContainers = @("https://11172016vmssa1.blob.core.windows.net/vhds",
-        "https://11172016vmssa2.blob.core.windows.net/vhds",
-        "https://11172016vmssa3.blob.core.windows.net/vhds")
+    $imagePublisher = "MicrosoftWindowsServer" 
+    $imageOffer = "WindowsServer"
+    $imageSku = "2012-R2-Datacenter"
         
     Set-AzureRmVmssStorageProfile -VirtualMachineScaleSet $vmss `
         -ImageReferencePublisher $imagePublisher `
